@@ -2,7 +2,7 @@
   "name": "stranger-server",
   "version": "0.0.1",
   "description": "Stranger backend built using Expressjs",
-  "main": "server.js",
+  "main": "app.js",
   "scripts": {
     "prebuild": "rimraf dist",
     "build": "yarn prebuild && tsc",
@@ -11,7 +11,7 @@
     "check-types": "tsc --pretty --noEmit",
     "check-format": "prettier --check .",
     "build:watch": "tsc --watch",
-    "build:run": "nodemon dist/server.js",
+    "build:run": "nodemon dist/app.js",
     "start:dev": "cross-env NODE_ENV=development concurrently \"yarn build:watch\" \"yarn build:run\"",
     "start:prod": "cross-env NODE_ENV=production node dist/index.js"
   },
@@ -23,6 +23,7 @@
   "license": "MIT",
   "dependencies": {
     "cross-env": "^7.0.3",
+    "dotenv": "^10.0.0",
     "express": "^4.17.1"
   },
   "devDependencies": {
@@ -33,9 +34,11 @@
     "concurrently": "^6.3.0",
     "eslint": "^7.32.0",
     "eslint-config-airbnb-base": "^14.2.1",
+    "eslint-config-airbnb-typescript": "^14.0.2",
     "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-import": "^2.25.2",
     "eslint-plugin-prettier": "^4.0.0",
+    "morgan": "^1.10.0",
     "nodemon": "^2.0.14",
     "prettier": "^2.4.1",
     "prisma": "^3.4.0",
