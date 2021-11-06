@@ -5,7 +5,7 @@
   "main": "app.js",
   "scripts": {
     "prebuild": "rimraf dist",
-    "build": "yarn prebuild && tsc",
+    "build": "tsc",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
     "check-types": "tsc --pretty --noEmit",
@@ -13,7 +13,8 @@
     "build:watch": "tsc --watch",
     "build:run": "nodemon dist/app.js",
     "start:dev": "cross-env NODE_ENV=development concurrently \"yarn build:watch\" \"yarn build:run\"",
-    "start:prod": "cross-env NODE_ENV=production node dist/index.js"
+    "start:prod": "cross-env NODE_ENV=production node dist/app.js",
+    "start": "cross-env NODE_ENV=development node dist/app.js"
   },
   "keywords": [
     "languages-spoken",
@@ -25,7 +26,8 @@
     "cross-env": "^7.0.3",
     "dotenv": "^10.0.0",
     "express": "^4.17.1",
-    "morgan": "^1.10.0"
+    "morgan": "^1.10.0",
+    "winston": "^3.3.3"
   },
   "devDependencies": {
     "@types/express": "^4.17.13",

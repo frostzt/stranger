@@ -3,18 +3,15 @@ import morgan from 'morgan';
 import dotenv from 'dotenv';
 import express, { Application } from 'express';
 
+import logger from './lib/logger';
+
 // Load the env vars based on the current NODE_ENV
 dotenv.config({ path: `../.env.${process.env.NODE_ENV}` });
-
-interface Route {
-  route: string;
-  handler: any;
-}
 
 class ExpressApplication {
   public app: Application;
 
-  constructor(private port: string | number, private middlewares: any[], private routes: Route[]) {
+  constructor(private port: string | number, private middlewares: any[], private routes: any[]) {
     this.app = express();
     this.port = port;
 
@@ -33,9 +30,9 @@ class ExpressApplication {
   }
 
   // Configure routes
-  private setupRoutes(routesArr: Route[]) {
-    routesArr.forEach(({ route, handler }) => {
-      this.app.use(route, handler);
+  private setupRoutes(routesArr: any[]) {
+    routesArr.forEach((route) => {
+      this.app.use('/', route);
     });
   }
 
@@ -43,7 +40,7 @@ class ExpressApplication {
     this.app.use(express.static(path.join(__dirname, '../public')));
   }
 
-  // The logger will work only for the development env
+  // The morgan route-logger will work only for the development env
   private setupLogger() {
     if (process.env.NODE_ENV === 'development') {
       this.app.use(morgan('dev'));
@@ -52,7 +49,7 @@ class ExpressApplication {
 
   public start() {
     this.app.listen(this.port, () => {
-      console.log(`Application started listening on port ${this.port}`);
+      logger.info(`Application started listening on port ${this.port}`);
     });
   }
 }
