@@ -2,8 +2,8 @@ import MetadataKeys from '../../utils/metadata.keys';
 
 export enum Methods {
   GET = 'get',
-  POST = 'post',
   PUT = 'put',
+  POST = 'post',
   DELETE = 'delete',
 }
 
