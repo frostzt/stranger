@@ -19,8 +19,9 @@ module.exports = {
   },
   plugins: ['@typescript-eslint', 'prettier'],
   rules: {
-    'prettier/prettier': ['error'],
     'import/extensions': [0],
+    'class-methods-use-this': [0],
+    'prettier/prettier': ['error'],
     'import/no-extraneous-dependencies': ['error', { devDependencies: true }],
   },
 };

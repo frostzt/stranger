@@ -1,23 +1,21 @@
-import express from 'express';
+import express, { Request, Response } from 'express';
 
 // Decorators
-import Get from '../../decorators/RouteDecorators/get.decorator';
+import Controller from '../../decorators/RouteDecorators/controller.decorator';
+import { Get } from '../../decorators/RouteDecorators/handlers.decorator';
 
+@Controller('/api/users')
 class UserController {
-  public path = '/api/users';
-
   public router;
 
   constructor() {
     this.router = express.Router();
-    this.init();
   }
 
-  // Initialize the routes
-  @Get()
-  init() {
-    this.router.get(this.path, (req, res) => res.send('test'));
+  @Get('')
+  public getUsers(req: Request, res: Response) {
+    return res.send('testing');
   }
 }
 
-export default new UserController().router;
+export default UserController;

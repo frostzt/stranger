@@ -1,6 +1,6 @@
 enum MetadataKeys {
   BASE_PATH = 'base_path',
-  ROUTER = 'router',
+  ROUTERS = 'router',
 }
 
 export default MetadataKeys;

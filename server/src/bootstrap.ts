@@ -1,23 +1,25 @@
 import path from 'path';
 import morgan from 'morgan';
 import dotenv from 'dotenv';
-import express, { Application } from 'express';
+import express, { Application, Handler } from 'express';
 
 import logger from './lib/logger';
+import MetadataKeys from './utils/metadata.keys';
+import { IRouter } from './decorators/RouteDecorators/handlers.decorator';
 
 // Load the env vars based on the current NODE_ENV
 dotenv.config({ path: `../.env.${process.env.NODE_ENV}` });
 
 class ExpressApplication {
-  public app: Application;
+  private app: Application;
 
-  constructor(private port: string | number, private middlewares: any[], private routes: any[]) {
+  constructor(private port: string | number, private middlewares: any[], private controllers: any[]) {
     this.app = express();
     this.port = port;
 
     // Initialize
     this.setupMiddlewares(middlewares);
-    this.setupRoutes(routes);
+    this.setupRoutes(controllers);
     this.configureAssets();
     this.setupLogger();
   }
@@ -30,10 +32,30 @@ class ExpressApplication {
   }
 
   // Configure routes
-  private setupRoutes(routesArr: any[]) {
-    routesArr.forEach((route) => {
-      this.app.use('/', route);
+  private setupRoutes(controllers: any[]) {
+    const info: Array<{ api: string; handler: string }> = [];
+
+    controllers.forEach((Controller) => {
+      const controllerInstance: { [handleName: string]: Handler } = new Controller();
+
+      const basePath: string = Reflect.getMetadata(MetadataKeys.BASE_PATH, Controller);
+      const routers: IRouter[] = Reflect.getMetadata(MetadataKeys.ROUTERS, Controller);
+
+      const expressRouter = express.Router();
+
+      routers.forEach(({ method, handlerPath, handlerName }) => {
+        expressRouter[method](handlerPath, controllerInstance[String(handlerName)].bind(controllerInstance));
+
+        info.push({
+          api: `${method.toLocaleUpperCase()} ${basePath + handlerPath}`,
+          handler: `${Controller.name}.${String(handlerName)}`,
+        });
+      });
+
+      this.app.use(basePath, expressRouter);
     });
+
+    console.table(info);
   }
 
   private configureAssets() {
