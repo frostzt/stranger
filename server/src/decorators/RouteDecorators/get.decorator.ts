@@ -1,9 +1,7 @@
-import { Router } from 'express';
+// import { Router } from 'express';
 
-function Get(router: Router) {
+function Get(): any {
   return function (target: any) {
-    console.log(router);
-    console.log('--------');
     console.log(target);
   };
 }
