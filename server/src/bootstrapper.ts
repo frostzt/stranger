@@ -10,7 +10,7 @@ import MetadataKeys from './utils/metadata.keys';
 import { IRouter } from './decorators/RouteDecorators/handlers.decorator';
 
 // Load the env vars based on the current NODE_ENV
-dotenv.config({ path: `../.env.${process.env.NODE_ENV}` });
+dotenv.config({ path: `../.env` });
 
 class ExpressApplication {
   private app: Application;
