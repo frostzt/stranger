@@ -1,7 +1,7 @@
 import express from 'express';
 import 'reflect-metadata';
 
-import ExpressApplication from './bootstrap';
+import ExpressApplication from './bootstrapper';
 
 // Controllers
 import UserController from './api/user/user.controller';
