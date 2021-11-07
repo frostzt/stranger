@@ -1,0 +1,21 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Stranger API",
+    "description": "API for Stranger, an application for people who love languages!",
+    "contact": {
+      "name": "frostzt"
+    },
+    "version": "3.0.3",
+    "license": {
+      "name": "MIT",
+      "url": "https://www.opensource.org/licenses/MIT"
+    }
+  },
+  "servers": [
+    {
+      "url": "http://localhost:5000/",
+      "description": "Local development server API"
+    }
+  ]
+}

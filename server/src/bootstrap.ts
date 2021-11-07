@@ -1,13 +1,12 @@
 import path from 'path';
 import morgan from 'morgan';
 import dotenv from 'dotenv';
-import swaggerJsDoc from 'swagger-jsdoc';
 import swaggerUi from 'swagger-ui-express';
 import express, { Application, Handler } from 'express';
 
 import logger from './lib/logger';
 import MetadataKeys from './utils/metadata.keys';
-import swaggerOptions from './lib/swagger.configuration';
+import swaggerOptions from './swagger.json';
 import { IRouter } from './decorators/RouteDecorators/handlers.decorator';
 
 // Load the env vars based on the current NODE_ENV
@@ -72,8 +71,7 @@ class ExpressApplication {
   }
 
   private setupSwagger() {
-    const swaggerDocs = swaggerJsDoc(swaggerOptions);
-    this.app.use('/api/documentation', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
+    this.app.use('/api/documentation', swaggerUi.serve, swaggerUi.setup(swaggerOptions));
   }
 
   public start() {
