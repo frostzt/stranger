@@ -9,13 +9,14 @@ export enum Methods {
 
 export interface IRouter {
   method: Methods;
+  middlewares?: any[];
   handlerPath: string;
   handlerName: string | symbol;
 }
 
 const methodDecoratorFactory =
   (method: Methods) =>
-  (path: string): MethodDecorator =>
+  (path: string, middlewares?: any[]): MethodDecorator =>
   (target, propertyKey) => {
     const controllerClass = target.constructor;
 
@@ -25,6 +26,7 @@ const methodDecoratorFactory =
 
     routers.push({
       method,
+      middlewares,
       handlerPath: path,
       handlerName: propertyKey,
     });

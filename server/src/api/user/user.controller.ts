@@ -1,16 +1,22 @@
 import { Request, Response } from 'express';
 
-// TSOA
-
 // Decorators
 import Controller from '../../decorators/RouteDecorators/controller.decorator';
 import { Get } from '../../decorators/RouteDecorators/handlers.decorator';
 
+import UserService from './user.service';
+
 @Controller('/api/users')
 class UserController {
+  private userService;
+
+  constructor() {
+    this.userService = new UserService();
+  }
+
   @Get('')
-  public getUsers(req: Request, res: Response) {
-    return res.send('testing');
+  public async getUsers(req: Request, res: Response) {
+    return this.userService.getUser(req, res);
   }
 }
 

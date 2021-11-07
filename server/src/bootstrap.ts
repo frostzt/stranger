@@ -5,8 +5,8 @@ import swaggerUi from 'swagger-ui-express';
 import express, { Application, Handler } from 'express';
 
 import logger from './lib/logger';
-import MetadataKeys from './utils/metadata.keys';
 import swaggerOptions from './swagger.json';
+import MetadataKeys from './utils/metadata.keys';
 import { IRouter } from './decorators/RouteDecorators/handlers.decorator';
 
 // Load the env vars based on the current NODE_ENV
@@ -46,8 +46,16 @@ class ExpressApplication {
 
       const expressRouter = express.Router();
 
-      routers.forEach(({ method, handlerPath, handlerName }) => {
-        expressRouter[method](handlerPath, controllerInstance[String(handlerName)].bind(controllerInstance));
+      routers.forEach(({ method, handlerPath, middlewares, handlerName }) => {
+        if (middlewares) {
+          expressRouter[method](
+            handlerPath,
+            ...middlewares,
+            controllerInstance[String(handlerName)].bind(controllerInstance),
+          );
+        } else {
+          expressRouter[method](handlerPath, controllerInstance[String(handlerName)].bind(controllerInstance));
+        }
 
         info.push({
           api: `${method.toLocaleUpperCase()} ${basePath + handlerPath}`,
