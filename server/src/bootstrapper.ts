@@ -1,6 +1,6 @@
 import path from 'path';
 import morgan from 'morgan';
-import dotenv from 'dotenv';
+import mongoose from 'mongoose';
 import swaggerUi from 'swagger-ui-express';
 import express, { Application, Handler } from 'express';
 
@@ -9,22 +9,29 @@ import swaggerOptions from './swagger.json';
 import MetadataKeys from './utils/metadata.keys';
 import { IRouter } from './decorators/RouteDecorators/handlers.decorator';
 
-// Load the env vars based on the current NODE_ENV
-dotenv.config({ path: `../.env.${process.env.NODE_ENV}` });
-
 class ExpressApplication {
   private app: Application;
+
+  private dbUrl: string;
 
   constructor(private port: string | number, private middlewares: any[], private controllers: any[]) {
     this.app = express();
     this.port = port;
+    this.dbUrl = process.env.DATABASE_URL!;
 
     // Initialize
+    this.connectToDatabase();
     this.setupMiddlewares(middlewares);
     this.setupRoutes(controllers);
     this.configureAssets();
     this.setupLogger();
     this.setupSwagger();
+  }
+
+  private connectToDatabase() {
+    mongoose.connect(this.dbUrl).then(() => {
+      logger.info('Connected to DB...');
+    });
   }
 
   // Configure and plug in middlewares
@@ -83,7 +90,7 @@ class ExpressApplication {
   }
 
   public start() {
-    this.app.listen(this.port, () => {
+    return this.app.listen(this.port, () => {
       logger.info(`Application started listening on port ${this.port}`);
     });
   }
