@@ -11,6 +11,10 @@ const userSchema = new mongoose.Schema({
     unique: true,
     lowercase: true,
   },
+  bio: {
+    type: String,
+    maxlength: 250,
+  },
   username: {
     type: String,
     unique: true,
@@ -26,6 +30,12 @@ const userSchema = new mongoose.Schema({
     type: Date,
     default: new Date(),
   },
+  servers: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'server',
+    },
+  ],
 });
 
 const User = mongoose.model('user', userSchema);

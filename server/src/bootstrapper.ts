@@ -1,6 +1,8 @@
 import path from 'path';
 import morgan from 'morgan';
 import mongoose from 'mongoose';
+import { Server } from 'socket.io';
+import { createServer, Server as HTTPServer } from 'http';
 import swaggerUi from 'swagger-ui-express';
 import express, { Application, Handler } from 'express';
 
@@ -12,10 +14,16 @@ import { IRouter } from './decorators/RouteDecorators/handlers.decorator';
 class ExpressApplication {
   private app: Application;
 
+  private httpServer: HTTPServer;
+
   private dbUrl: string;
+
+  public io;
 
   constructor(private port: string | number, private middlewares: any[], private controllers: any[]) {
     this.app = express();
+    this.httpServer = createServer(this.app);
+    this.io = new Server(this.httpServer);
     this.port = port;
     this.dbUrl = process.env.DATABASE_URL!;
 
@@ -29,9 +37,14 @@ class ExpressApplication {
   }
 
   private connectToDatabase() {
-    mongoose.connect(this.dbUrl).then(() => {
-      logger.info('Connected to DB...');
-    });
+    try {
+      mongoose.connect(this.dbUrl).then(() => {
+        logger.info('Connected to DB...');
+      });
+    } catch (error) {
+      logger.error(error);
+      throw new Error('There was an error connecting to the database...');
+    }
   }
 
   // Configure and plug in middlewares
@@ -90,7 +103,7 @@ class ExpressApplication {
   }
 
   public start() {
-    return this.app.listen(this.port, () => {
+    return this.httpServer.listen(this.port, () => {
       logger.info(`Application started listening on port ${this.port}`);
     });
   }
