@@ -1,6 +1,17 @@
 import mongoose from 'mongoose';
+import bcrypt from 'bcrypt';
 
-const userSchema = new mongoose.Schema({
+interface IUser {
+  name: string;
+  email: string;
+  bio?: string;
+  username: string;
+  password: string;
+  createdAt: Date;
+  servers?: any[];
+}
+
+const userSchema = new mongoose.Schema<IUser>({
   name: {
     type: String,
     required: true,
@@ -36,6 +47,12 @@ const userSchema = new mongoose.Schema({
       ref: 'server',
     },
   ],
+});
+
+// Encrypt password before save
+userSchema.pre('save', async function encryptPassword(next) {
+  this.password = await bcrypt.hash(this.password, 12);
+  next();
 });
 
 const User = mongoose.model('user', userSchema);
