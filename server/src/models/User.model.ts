@@ -1,10 +1,13 @@
-import mongoose from 'mongoose';
 import bcrypt from 'bcrypt';
+import mongoose from 'mongoose';
+
+import UserRoles from '../Enums/UserRoles.enum';
 
 interface IUser {
   name: string;
   email: string;
   bio?: string;
+  role: string;
   username: string;
   password: string;
   createdAt: Date;
@@ -25,6 +28,11 @@ const userSchema = new mongoose.Schema<IUser>({
   bio: {
     type: String,
     maxlength: 250,
+  },
+  role: {
+    type: String,
+    enum: ['USER', 'ADMIN'],
+    default: UserRoles.USER,
   },
   username: {
     type: String,
@@ -55,6 +63,6 @@ userSchema.pre('save', async function encryptPassword(next) {
   next();
 });
 
-const User = mongoose.model('user', userSchema);
+const User = mongoose.model<IUser>('user', userSchema);
 
 export default User;
