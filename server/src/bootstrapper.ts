@@ -10,6 +10,8 @@ import logger from './lib/logger';
 import swaggerOptions from './swagger.json';
 import MetadataKeys from './utils/metadata.keys';
 import { IRouter } from './decorators/RouteDecorators/handlers.decorator';
+import globalErrorHandler from './middlewares/globalErrorHandler.middleware';
+import NotFoundError from './api/errors/NotFound.error';
 
 class ExpressApplication {
   private app: Application;
@@ -31,6 +33,7 @@ class ExpressApplication {
     this.connectToDatabase();
     this.setupMiddlewares(middlewares);
     this.setupRoutes(controllers);
+    this.handleErrorsAndNotFound();
     this.configureAssets();
     this.setupLogger();
     this.setupSwagger();
@@ -99,6 +102,15 @@ class ExpressApplication {
 
   private setupSwagger() {
     this.app.use('/api/documentation', swaggerUi.serve, swaggerUi.setup(swaggerOptions));
+  }
+
+  // pass the thrown errors to the globalErrorHandler
+  private handleErrorsAndNotFound() {
+    this.app.all('*', () => {
+      throw new NotFoundError();
+    });
+
+    this.app.use(globalErrorHandler);
   }
 
   public start() {

@@ -6,7 +6,7 @@ import ExpressApplication from './bootstrapper';
 
 // Controllers
 import UserController from './api/user/user.controller';
-import logger from './lib/logger';
+// import logger from './lib/logger';
 
 // Load the env vars based on the current NODE_ENV
 dotenv.config({ path: `${process.cwd()}/.env.${process.env.NODE_ENV}` });
@@ -20,7 +20,7 @@ const app = new ExpressApplication(
 );
 
 // Start the server
-const server = app.start();
+app.start();
 
 // Shutdown on unhandled Rejection
 // process.on('unhandledRejection', (err: Error) => {
@@ -31,9 +31,9 @@ const server = app.start();
 // });
 
 // Handle SIGTERM
-process.on('SIGTERM', () => {
-  logger.warn('SIGTERM RECIEVED!');
-  server.close(() => {
-    logger.warn('Process terminated');
-  });
-});
+// process.on('SIGTERM', () => {
+//   logger.warn('SIGTERM RECIEVED!');
+//   server.close(() => {
+//     logger.warn('Process terminated');
+//   });
+// });
