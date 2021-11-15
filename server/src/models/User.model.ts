@@ -3,7 +3,7 @@ import mongoose from 'mongoose';
 
 import UserRoles from '../Enums/UserRoles.enum';
 
-interface IUser {
+interface UserAttrs {
   name: string;
   email: string;
   bio?: string;
@@ -14,7 +14,22 @@ interface IUser {
   servers?: any[];
 }
 
-const userSchema = new mongoose.Schema<IUser>({
+interface UserModel extends mongoose.Model<UserDoc> {
+  build: (attrs: UserAttrs) => UserDoc;
+}
+
+interface UserDoc extends mongoose.Document {
+  name: string;
+  email: string;
+  bio?: string;
+  role: string;
+  username: string;
+  password: string;
+  createdAt: Date;
+  servers?: any[];
+}
+
+const userSchema = new mongoose.Schema<UserAttrs>({
   name: {
     type: String,
     required: true,
@@ -63,6 +78,10 @@ userSchema.pre('save', async function encryptPassword(next) {
   next();
 });
 
-const User = mongoose.model<IUser>('user', userSchema);
+// the statics needs to come before the User object is created
+// eslint-disable-next-line @typescript-eslint/no-use-before-define
+userSchema.statics.build = (attrs: UserAttrs) => new User(attrs);
+
+const User = mongoose.model<UserDoc, UserModel>('user', userSchema);
 
 export default User;
