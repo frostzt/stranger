@@ -1,5 +1,7 @@
 import { NextFunction, Request, Response } from 'express';
-import CustomError from '../api/errors/CustomError';
+
+import DatabaseError from '../errors/DatabaseError.error';
+import CustomError from '../errors/CustomError';
 
 const globalErrorHandler = (
   err: Error,
@@ -9,6 +11,11 @@ const globalErrorHandler = (
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   next: NextFunction,
 ): Response<any, Record<string, any>> => {
+  // If error is related to DB send response and send a SIGTERM
+  if (err instanceof DatabaseError) {
+    res.status(err.statusCode).send({ errors: err.serializeErrors() });
+    process.kill(process.pid, 'SIGTERM');
+  }
   if (err instanceof CustomError) {
     return res.status(err.statusCode).send({ errors: err.serializeErrors() });
   }

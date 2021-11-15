@@ -2,16 +2,20 @@ import path from 'path';
 import morgan from 'morgan';
 import mongoose from 'mongoose';
 import { Server } from 'socket.io';
-import { createServer, Server as HTTPServer } from 'http';
 import swaggerUi from 'swagger-ui-express';
 import express, { Application, Handler } from 'express';
+import { createServer, Server as HTTPServer } from 'http';
+import { DefaultEventsMap } from 'socket.io/dist/typed-events';
 
+// Utils
 import logger from './lib/logger';
 import swaggerOptions from './swagger.json';
 import MetadataKeys from './utils/metadata.keys';
 import { IRouter } from './decorators/RouteDecorators/handlers.decorator';
+
+// Middlewares
+import NotFoundError from './errors/NotFoundError.error';
 import globalErrorHandler from './middlewares/globalErrorHandler.middleware';
-import NotFoundError from './api/errors/NotFound.error';
 
 class ExpressApplication {
   private app: Application;
@@ -20,7 +24,7 @@ class ExpressApplication {
 
   private dbUrl: string;
 
-  public io;
+  public io: Server<DefaultEventsMap, DefaultEventsMap, DefaultEventsMap>;
 
   constructor(private port: string | number, private middlewares: any[], private controllers: any[]) {
     this.app = express();
@@ -31,8 +35,8 @@ class ExpressApplication {
 
     // Initialize
     this.connectToDatabase();
-    this.setupMiddlewares(middlewares);
-    this.setupRoutes(controllers);
+    this.setupMiddlewares(this.middlewares);
+    this.setupRoutes(this.controllers);
     this.handleErrorsAndNotFound();
     this.configureAssets();
     this.setupLogger();
