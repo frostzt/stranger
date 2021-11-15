@@ -1,11 +1,13 @@
 import dotenv from 'dotenv';
 import express from 'express';
-import 'reflect-metadata';
+import 'reflect-metadata'; // for store decorator metadata
+import 'express-async-errors'; // error handler can't do shit without this
 
 import ExpressApplication from './bootstrapper';
 
 // Controllers
 import UserController from './api/user/user.controller';
+import AuthController from './api/auth/auth.controller';
 // import logger from './lib/logger';
 
 // Load the env vars based on the current NODE_ENV
@@ -16,7 +18,7 @@ const PORT = process.env.PORT || 5000;
 const app = new ExpressApplication(
   PORT,
   [express.json({ limit: '10kb' }), express.urlencoded({ extended: true, limit: '10kb' })],
-  [UserController],
+  [UserController, AuthController],
 );
 
 // Start the server

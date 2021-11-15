@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from 'express';
 
-import DatabaseError from '../errors/DatabaseError.error';
 import CustomError from '../errors/CustomError';
+import DatabaseError from '../errors/DatabaseError.error';
 
 const globalErrorHandler = (
   err: Error,
@@ -16,6 +16,7 @@ const globalErrorHandler = (
     res.status(err.statusCode).send({ errors: err.serializeErrors() });
     process.kill(process.pid, 'SIGTERM');
   }
+
   if (err instanceof CustomError) {
     return res.status(err.statusCode).send({ errors: err.serializeErrors() });
   }

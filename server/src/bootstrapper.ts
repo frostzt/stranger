@@ -15,6 +15,7 @@ import { IRouter } from './decorators/RouteDecorators/handlers.decorator';
 
 // Middlewares
 import NotFoundError from './errors/NotFoundError.error';
+import DatabaseError from './errors/DatabaseError.error';
 import globalErrorHandler from './middlewares/globalErrorHandler.middleware';
 
 class ExpressApplication {
@@ -34,22 +35,23 @@ class ExpressApplication {
     this.dbUrl = process.env.DATABASE_URL!;
 
     // Initialize
-    this.connectToDatabase();
+    this.initDatabase();
     this.setupMiddlewares(this.middlewares);
     this.setupRoutes(this.controllers);
-    this.handleErrorsAndNotFound();
+    this.handleNotFound();
     this.configureAssets();
     this.setupLogger();
     this.setupSwagger();
+    this.globalErrorHandler();
   }
 
-  private async connectToDatabase() {
+  private async initDatabase() {
     try {
       await mongoose.connect(this.dbUrl);
       logger.info('Connected to database...');
     } catch (error) {
       logger.error(error);
-      throw new Error('There was an error connecting to the database...');
+      throw new DatabaseError();
     }
   }
 
@@ -91,6 +93,8 @@ class ExpressApplication {
 
       this.app.use(basePath, expressRouter);
     });
+
+    console.table(info);
   }
 
   private configureAssets() {
@@ -109,11 +113,13 @@ class ExpressApplication {
   }
 
   // pass the thrown errors to the globalErrorHandler
-  private handleErrorsAndNotFound() {
+  private handleNotFound() {
     this.app.all('*', () => {
       throw new NotFoundError();
     });
+  }
 
+  private globalErrorHandler() {
     this.app.use(globalErrorHandler);
   }
 
