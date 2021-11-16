@@ -1,11 +1,14 @@
 import { Response } from 'express';
+import SuccessStatus from '../Enums/SuccessStatus.enum';
 
 import ResponseConstructor from './ResponseConstructor';
 
 export default class SendSuccessResponse<U> extends ResponseConstructor<U> {
-  constructor(public res: Response, public statusCode: number, public status: string, public data: U) {
+  constructor(public res: Response, public statusCode: number, public status: SuccessStatus, public data: U) {
     super();
     Object.setPrototypeOf(this, SendSuccessResponse.prototype);
+
+    this.send();
   }
 
   public send() {

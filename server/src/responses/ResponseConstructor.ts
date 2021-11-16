@@ -1,7 +1,9 @@
+import SuccessStatus from '../Enums/SuccessStatus.enum';
+
 export default abstract class ResponseConstructor<T> {
   abstract statusCode: number;
 
-  abstract status: string;
+  abstract status: SuccessStatus;
 
   abstract data: T;
 

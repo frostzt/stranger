@@ -4,7 +4,9 @@ import { validationResult } from 'express-validator';
 import DuplicateEntityError from '../../errors/DuplicateEntityError.error';
 import RequestValidationError from '../../errors/RequestValidationError.error';
 
-import User from '../../models/User.model';
+import User, { UserDoc } from '../../models/User.model';
+import SuccessStatus from '../../Enums/SuccessStatus.enum';
+import SendSuccessResponse from '../../responses/SendSuccessResponse.response';
 
 export default class AuthService {
   public async signUp(req: Request, res: Response) {
@@ -30,11 +32,6 @@ export default class AuthService {
     });
     newUser.save();
 
-    return res.send({
-      name,
-      username,
-      email,
-      password,
-    });
+    return new SendSuccessResponse<UserDoc>(res, 201, SuccessStatus.CREATED, newUser);
   }
 }
