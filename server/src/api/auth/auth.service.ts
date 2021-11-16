@@ -30,7 +30,7 @@ export default class AuthService {
       email,
       password,
     });
-    newUser.save();
+    await newUser.save();
 
     return new SendSuccessResponse<UserDoc>(res, 201, SuccessStatus.CREATED, newUser);
   }
