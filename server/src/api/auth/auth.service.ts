@@ -1,5 +1,7 @@
 import { Request, Response } from 'express';
 import { validationResult } from 'express-validator';
+
+import DuplicateEntityError from '../../errors/DuplicateEntityError.error';
 import RequestValidationError from '../../errors/RequestValidationError.error';
 
 import User from '../../models/User.model';
@@ -11,14 +13,26 @@ export default class AuthService {
       throw new RequestValidationError(errors.array());
     }
 
-    const { email, password } = req.body;
+    const { name, username, email, password } = req.body;
 
+    // Check for existing user
     const existingUser = await User.findOne({ email });
     if (existingUser) {
-      return res.send({ msg: 'User exits' });
+      throw new DuplicateEntityError({ message: 'User already exists', param: 'user' });
     }
 
+    // Create a new user
+    const newUser = User.build({
+      name,
+      username,
+      email,
+      password,
+    });
+    newUser.save();
+
     return res.send({
+      name,
+      username,
       email,
       password,
     });

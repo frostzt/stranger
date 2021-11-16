@@ -7,10 +7,10 @@ interface UserAttrs {
   name: string;
   email: string;
   bio?: string;
-  role: string;
+  role?: string;
   username: string;
   password: string;
-  createdAt: Date;
+  createdAt?: Date;
   servers?: any[];
 }
 
@@ -22,11 +22,12 @@ interface UserDoc extends mongoose.Document {
   name: string;
   email: string;
   bio?: string;
-  role: string;
+  role?: string;
   username: string;
   password: string;
-  createdAt: Date;
+  createdAt?: Date;
   servers?: any[];
+  correctPassword: (candidatePassword: string, userPassword: string) => boolean;
 }
 
 const userSchema = new mongoose.Schema<UserAttrs>({
@@ -77,6 +78,12 @@ userSchema.pre('save', async function encryptPassword(next) {
   this.password = await bcrypt.hash(this.password, 12);
   next();
 });
+
+// Allow comparePassword to exist on the userDoc
+userSchema.methods.correctPassword = async function comparePassword(candidatePassword: string, userPassword: string) {
+  const match = await bcrypt.compare(candidatePassword, userPassword);
+  return match;
+};
 
 // the statics needs to come before the User object is created
 // eslint-disable-next-line @typescript-eslint/no-use-before-define
