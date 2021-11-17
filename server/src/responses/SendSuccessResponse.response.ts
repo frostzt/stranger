@@ -14,6 +14,7 @@ export default class SendSuccessResponse<U> extends ResponseConstructor<U> {
   public send() {
     this.res.status(this.statusCode).json({
       status: this.status,
+      statusCode: this.statusCode,
       data: this.data,
     });
   }

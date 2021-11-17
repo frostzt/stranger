@@ -38,10 +38,11 @@ class ExpressApplication {
     this.initDatabase();
     this.setupMiddlewares(this.middlewares);
     this.setupRoutes(this.controllers);
-    this.handleNotFound();
+    this.setupSwagger();
     this.configureAssets();
     this.setupLogger();
-    this.setupSwagger();
+
+    this.handleNotFound();
     this.globalErrorHandler();
   }
 

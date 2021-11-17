@@ -2,7 +2,7 @@ import CustomError from './CustomError';
 
 interface EntityDescription {
   message: string;
-  param: string;
+  param?: string;
 }
 
 export default class DuplicateEntityError extends CustomError {

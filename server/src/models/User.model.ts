@@ -76,10 +76,10 @@ const userSchema = new mongoose.Schema<UserAttrs>(
   },
   {
     toJSON: {
+      versionKey: false,
       transform: function serializeDoc(doc, ret) {
         ret.id = ret._id;
         delete ret._id;
-        delete ret.__v;
       },
     },
   },
