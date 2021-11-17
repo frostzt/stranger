@@ -1,5 +1,6 @@
 import dotenv from 'dotenv';
 import express from 'express';
+import cookieParser from 'cookie-parser';
 import 'reflect-metadata'; // for store decorator metadata
 import 'express-async-errors'; // error handler can't do shit without this
 
@@ -17,7 +18,7 @@ const PORT = process.env.PORT || 5000;
 
 const app = new ExpressApplication(
   PORT,
-  [express.json({ limit: '10kb' }), express.urlencoded({ extended: true, limit: '10kb' })],
+  [express.json({ limit: '10kb' }), express.urlencoded({ extended: true, limit: '10kb' }), cookieParser()],
   [UserController, AuthController],
 );
 

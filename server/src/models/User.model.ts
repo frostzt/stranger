@@ -1,3 +1,4 @@
+/* eslint-disable no-param-reassign */
 import bcrypt from 'bcrypt';
 import mongoose from 'mongoose';
 
@@ -30,48 +31,59 @@ export interface UserDoc extends mongoose.Document {
   correctPassword: (candidatePassword: string, userPassword: string) => boolean;
 }
 
-const userSchema = new mongoose.Schema<UserAttrs>({
-  name: {
-    type: String,
-    required: true,
-  },
-  email: {
-    type: String,
-    required: true,
-    unique: true,
-    lowercase: true,
-  },
-  bio: {
-    type: String,
-    maxlength: 250,
-  },
-  role: {
-    type: String,
-    enum: ['USER', 'ADMIN'],
-    default: UserRoles.USER,
-  },
-  username: {
-    type: String,
-    unique: true,
-    required: true,
-  },
-  password: {
-    type: String,
-    minlength: 8,
-    required: true,
-    select: false,
-  },
-  createdAt: {
-    type: Date,
-    default: new Date(),
-  },
-  servers: [
-    {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'server',
+const userSchema = new mongoose.Schema<UserAttrs>(
+  {
+    name: {
+      type: String,
+      required: true,
     },
-  ],
-});
+    email: {
+      type: String,
+      required: true,
+      unique: true,
+      lowercase: true,
+    },
+    bio: {
+      type: String,
+      maxlength: 250,
+    },
+    role: {
+      type: String,
+      enum: ['USER', 'ADMIN'],
+      default: UserRoles.USER,
+    },
+    username: {
+      type: String,
+      unique: true,
+      required: true,
+    },
+    password: {
+      type: String,
+      minlength: 8,
+      required: true,
+      select: false,
+    },
+    createdAt: {
+      type: Date,
+      default: new Date(),
+    },
+    servers: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'server',
+      },
+    ],
+  },
+  {
+    toJSON: {
+      transform: function serializeDoc(doc, ret) {
+        ret.id = ret._id;
+        delete ret._id;
+        delete ret.__v;
+      },
+    },
+  },
+);
 
 // Encrypt password before save
 userSchema.pre('save', async function encryptPassword(next) {

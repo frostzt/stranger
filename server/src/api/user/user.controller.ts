@@ -5,7 +5,7 @@ import Controller from '../../decorators/RouteDecorators/controller.decorator';
 import { Get } from '../../decorators/RouteDecorators/handlers.decorator';
 
 // Middlewares
-import restrictTo from '../../middlewares/restrictTo.middleware';
+import restrictTo from '../../middlewares/authentication/restrictTo.middleware';
 
 // Service
 import UserService from './user.service';

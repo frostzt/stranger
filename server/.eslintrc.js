@@ -23,5 +23,6 @@ module.exports = {
     'class-methods-use-this': [0],
     'prettier/prettier': ['error'],
     'import/no-extraneous-dependencies': ['error', { devDependencies: true }],
+    'no-underscore-dangle': ['error', { allow: ['_id', '__v'] }],
   },
 };
