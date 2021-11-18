@@ -1,11 +1,11 @@
 import { Request, Response } from 'express';
 
-import { signToken } from './auth.utils';
 import User from '../../models/User.model';
 import UserSignupDTO from './dtos/userSignup.dto';
 import SuccessStatus from '../../Enums/SuccessStatus.enum';
 import DuplicateEntityError from '../../errors/DuplicateEntityError.error';
 import SendSuccessResponse from '../../responses/SendSuccessResponse.response';
+import { generateRefreshToken, setRefrehTokenCookie, signToken } from './auth.utils';
 
 export default class AuthService {
   public async signUp(req: Request, res: Response) {
@@ -26,9 +26,11 @@ export default class AuthService {
     });
     await user.save();
 
-    // Generate JWT
+    // Generate JWT and set refreshToken
     const userJwt = signToken({ id: user.id, email: user.email, username: user.username });
+    const refreshToken = generateRefreshToken(user);
+    setRefrehTokenCookie(res, refreshToken.rtoken);
 
-    return new SendSuccessResponse(res, 201, SuccessStatus.CREATED, { user, userJwt });
+    return new SendSuccessResponse(res, 201, SuccessStatus.CREATED, { user, accessToken: userJwt });
   }
 }

@@ -5,11 +5,11 @@ interface RefreshTokenAttrs {
   user: any;
   rtoken: string;
   expires: Date;
-  createdAt: Date;
-  revoked: boolean;
-  revokedAt: Date;
-  isExpired: boolean;
-  isActive: boolean;
+  createdAt?: Date;
+  revoked?: boolean;
+  revokedAt?: Date;
+  isExpired?: boolean;
+  isActive?: boolean;
 }
 
 interface RefreshTokenModel extends mongoose.Model<RefreshTokenDoc> {
