@@ -17,6 +17,7 @@ import { IRouter } from './decorators/RouteDecorators/handlers.decorator';
 import NotFoundError from './errors/NotFoundError.error';
 import DatabaseError from './errors/DatabaseError.error';
 import globalErrorHandler from './middlewares/globalErrorHandler.middleware';
+import EnvironmentalVariableNotFoundError from './errors/EnvironmentalVariableNotFoundError.error';
 
 class ExpressApplication {
   private app: Application;
@@ -35,6 +36,7 @@ class ExpressApplication {
     this.dbUrl = process.env.DATABASE_URL!;
 
     // Initialize
+    this.verifyEnvironmentalVariables();
     this.initDatabase();
     this.setupMiddlewares(this.middlewares);
     this.setupRoutes(this.controllers);
@@ -44,6 +46,17 @@ class ExpressApplication {
 
     this.handleNotFound();
     this.globalErrorHandler();
+  }
+
+  private async verifyEnvironmentalVariables() {
+    if (
+      !process.env.JWT_SECRET ||
+      !process.env.JWT_EXPIRES_IN ||
+      !process.env.REFRESH_TOKEN_EXPIRES_IN ||
+      !process.env.DATABASE_URL
+    ) {
+      throw new EnvironmentalVariableNotFoundError();
+    }
   }
 
   private async initDatabase() {
