@@ -1,8 +1,8 @@
 import { NextFunction, Request, Response } from 'express';
 
+import logger from '../lib/logger';
 import CustomError from '../errors/CustomError';
 import DatabaseError from '../errors/DatabaseError.error';
-// import logger from '../lib/logger';
 
 const globalErrorHandler = (
   err: Error,
@@ -46,7 +46,7 @@ const globalErrorHandler = (
     return res.status(401).json({ errors: [{ message: 'Token expired please login again.' }] });
   }
 
-  console.log(JSON.parse(JSON.stringify(err)));
+  logger.error(JSON.parse(JSON.stringify(err)));
 
   res.status(500).send({
     errors: [{ message: 'Um, I guess something broke?! I am on it!' }],
