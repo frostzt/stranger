@@ -2,7 +2,7 @@ import { NextFunction, Request, Response } from 'express';
 
 import CustomError from '../errors/CustomError';
 import DatabaseError from '../errors/DatabaseError.error';
-import logger from '../lib/logger';
+// import logger from '../lib/logger';
 
 const globalErrorHandler = (
   err: Error,
@@ -35,7 +35,19 @@ const globalErrorHandler = (
       .json({ errors: duplicates.map((item) => ({ message: `${item} is already taken.`, param: item })) });
   }
 
-  logger.error(err);
+  // CastError points to failure by mongoose to convert the supplied ObjectID string to a real ObjectID
+  if (err.name === 'CastError') {
+    const error = err as any;
+    return res.status(400).json({ errors: [{ message: `Invalid ${error.path}: ${error.value}` }] });
+  }
+
+  // Handle JWT Token expired
+  if (err.name === 'TokenExpiredError') {
+    return res.status(401).json({ errors: [{ message: 'Token expired please login again.' }] });
+  }
+
+  console.log(JSON.parse(JSON.stringify(err)));
+
   res.status(500).send({
     errors: [{ message: 'Um, I guess something broke?! I am on it!' }],
   });

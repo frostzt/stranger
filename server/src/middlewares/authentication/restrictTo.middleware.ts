@@ -1,10 +1,17 @@
-import { NextFunction, Request, Response } from 'express';
+import { NextFunction, Response } from 'express';
 
 import UserRoles from '../../Enums/UserRoles.enum';
-import logger from '../../lib/logger';
+import UnauthorizedError from '../../errors/UnauthorizedError.error';
+import AuthenticatedRequest from '../../interfaces/AuthenticatedRequest.interface';
 
-const restrictTo = (roles: UserRoles) => (_req: Request, _res: Response, next: NextFunction) => {
-  logger.info(`restricted to ${roles}`);
+/**
+ * Middleware for restricting a certain resource to a specific role
+ * @param role could be either USER | ADMIN
+ */
+const restrictTo = (role: UserRoles) => (req: AuthenticatedRequest, _res: Response, next: NextFunction) => {
+  if (req.user.role !== role) {
+    throw new UnauthorizedError("Sorry you're not authorized to access this resource.");
+  }
 
   next();
 };

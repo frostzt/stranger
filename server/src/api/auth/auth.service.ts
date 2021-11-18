@@ -2,14 +2,21 @@ import { Request, Response } from 'express';
 
 import User from '../../models/User.model';
 import UserSignupDTO from './dtos/userSignup.dto';
+import UserSignInDTO from './dtos/userSignin.dto';
 import SuccessStatus from '../../Enums/SuccessStatus.enum';
 import RefreshToken from '../../models/RefreshToken.model';
 import BadRequestError from '../../errors/BadRequestError.error';
 import DuplicateEntityError from '../../errors/DuplicateEntityError.error';
 import SendSuccessResponse from '../../responses/SendSuccessResponse.response';
+import AuthenticatedRequest from '../../interfaces/AuthenticatedRequest.interface';
 import { comparePasswords, generateRefreshToken, setRefreshTokenCookie, signToken } from './auth.utils';
 
 export default class AuthService {
+  /**
+   * @method POST
+   * @route /api/auth/signUp
+   * @returns Object with AccessToken and UserData, sets RefreshToken cookie
+   */
   public async signUp(req: Request, res: Response) {
     const { name, username, email, password }: UserSignupDTO = req.body;
 
@@ -36,8 +43,13 @@ export default class AuthService {
     return new SendSuccessResponse(res, 201, SuccessStatus.CREATED, { user, accessToken: userJwt });
   }
 
+  /**
+   * @method POST
+   * @route /api/auth/signIn
+   * @returns Object with AccessToken and UserData, sets RefreshToken Cookie
+   */
   public async signIn(req: Request, res: Response) {
-    const { email, password } = req.body;
+    const { email, password }: UserSignInDTO = req.body;
 
     // Check for existing user
     const user = await User.findOne({ email });
@@ -52,5 +64,41 @@ export default class AuthService {
     setRefreshTokenCookie(res, refreshToken.rtoken);
 
     return new SendSuccessResponse(res, 200, SuccessStatus.SUCCESS, { user, accessToken: userJwt });
+  }
+
+  /**
+   * @method POST
+   * @route /api/auth/refreshToken
+   * @returns Object with AccessToken and UserData
+   */
+  public async refreshToken(req: Request, res: Response) {
+    const { refreshToken } = req.cookies;
+
+    // Check for the user using refreshToken
+    const rTokenObject = await RefreshToken.findOne({ rtoken: refreshToken });
+    if (rTokenObject?.revoked || rTokenObject?.isExpired) {
+      throw new BadRequestError('Your session has expired please login again!');
+    }
+
+    // Generate JWT and send it back
+    const user = await User.findOne({ id: rTokenObject?.user });
+    if (!user) {
+      throw new BadRequestError('Invalid credentials');
+    }
+    const userJwt = signToken({ id: user.id, email: user.email, username: user.username });
+
+    return new SendSuccessResponse(res, 200, SuccessStatus.SUCCESS, { user, accessToken: userJwt });
+  }
+
+  /**
+   * @method GET
+   * @restrictedTo ADMIN only
+   * @route /api/auth/signUp
+   * @returns Object with AccessToken and UserData, sets RefreshToken cookie
+   */
+  public async allTokens(_req: AuthenticatedRequest, res: Response) {
+    const data = await RefreshToken.find();
+
+    return new SendSuccessResponse(res, 200, SuccessStatus.SUCCESS, data);
   }
 }

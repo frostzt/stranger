@@ -2,9 +2,13 @@ import { body } from 'express-validator';
 import { Request, Response } from 'express';
 
 import AuthService from './auth.service';
-import { Post } from '../../decorators/RouteDecorators/handlers.decorator';
+import UserRoles from '../../Enums/UserRoles.enum';
 import Controller from '../../decorators/RouteDecorators/controller.decorator';
+import { Get, Post } from '../../decorators/RouteDecorators/handlers.decorator';
+import restrictTo from '../../middlewares/authentication/restrictTo.middleware';
+import AuthenticatedRequest from '../../interfaces/AuthenticatedRequest.interface';
 import validateRequest from '../../middlewares/authentication/requestValidation.middleware';
+import requireAuthentication from '../../middlewares/authentication/requireAuthentication.middleware';
 
 @Controller('/api/auth')
 export default class AuthController {
@@ -54,5 +58,27 @@ export default class AuthController {
   ])
   public async signIn(req: Request, res: Response) {
     return this.authService.signIn(req, res);
+  }
+
+  /**
+   * Refreshes the accessToken for the user by providing a refreshToken in the cookies
+   * @param req Request object
+   * @param res Response object
+   * @returns Object containing user object and new accessToken
+   */
+  @Post('/refreshToken')
+  public async refreshToken(req: Request, res: Response) {
+    return this.authService.refreshToken(req, res);
+  }
+
+  /**
+   * Returns all the available all the refreshTokens
+   * @param req Request object
+   * @param res Response object
+   * @returns Object containing array of all the tokens
+   */
+  @Get('/allTokens', [requireAuthentication, restrictTo(UserRoles.ADMIN)])
+  public async allTokens(req: AuthenticatedRequest, res: Response) {
+    return this.authService.allTokens(req, res);
   }
 }

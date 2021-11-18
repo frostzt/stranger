@@ -3,12 +3,12 @@ import CustomError from './CustomError';
 export default class UnauthorizedError extends CustomError {
   statusCode = 401;
 
-  constructor() {
-    super('Unauthorized!');
+  constructor(public message: string) {
+    super(message);
     Object.setPrototypeOf(this, UnauthorizedError.prototype);
   }
 
   serializeErrors() {
-    return [{ message: "You're not authorized to access this route!" }];
+    return [{ message: this.message }];
   }
 }
