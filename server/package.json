@@ -13,7 +13,7 @@
     "build:watch": "tsc --watch",
     "start:dev": "cross-env NODE_ENV=development ts-node-dev src/app.ts",
     "start:prod": "cross-env NODE_ENV=production node dist/app.js",
-    "start": "cross-env NODE_ENV=development node dist/app.js"
+    "start": "cross-env NODE_ENV=production node dist/app.js"
   },
   "keywords": [
     "languages-spoken",
@@ -71,5 +71,8 @@
   "bugs": {
     "url": "https://github.com/frostzt/stranger-server/issues"
   },
-  "homepage": "https://github.com/frostzt/stranger-server#readme"
+  "homepage": "https://github.com/frostzt/stranger-server#readme",
+  "engines": {
+    "node": "14.x"
+  }
 }

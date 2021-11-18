@@ -8,7 +8,7 @@ import { createServer, Server as HTTPServer } from 'http';
 import { DefaultEventsMap } from 'socket.io/dist/typed-events';
 
 // Utils
-import logger from './lib/logger';
+import logger from './utils/logger';
 import swaggerOptions from './swagger.json';
 import MetadataKeys from './utils/metadata.keys';
 import { IRouter } from './decorators/RouteDecorators/handlers.decorator';

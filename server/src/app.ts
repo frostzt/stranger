@@ -12,7 +12,11 @@ import AuthController from './api/auth/auth.controller';
 // import logger from './lib/logger';
 
 // Load the env vars based on the current NODE_ENV
-dotenv.config({ path: `${process.cwd()}/.env.${process.env.NODE_ENV}` });
+if (process.env.NODE_ENV !== 'production') {
+  dotenv.config({ path: `${process.cwd()}/.env.${process.env.NODE_ENV}` });
+} else {
+  dotenv.config();
+}
 
 const PORT = process.env.PORT || 5000;
 

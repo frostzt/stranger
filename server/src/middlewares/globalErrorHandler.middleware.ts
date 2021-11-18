@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from 'express';
 
-import logger from '../lib/logger';
+import logger from '../utils/logger';
 import CustomError from '../errors/CustomError';
 import DatabaseError from '../errors/DatabaseError.error';
 
