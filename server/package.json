@@ -63,5 +63,13 @@
     "ts-node": "^10.4.0",
     "ts-node-dev": "^1.1.8",
     "typescript": "^4.4.4"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/frostzt/stranger-server.git"
+  },
+  "bugs": {
+    "url": "https://github.com/frostzt/stranger-server/issues"
+  },
+  "homepage": "https://github.com/frostzt/stranger-server#readme"
 }
