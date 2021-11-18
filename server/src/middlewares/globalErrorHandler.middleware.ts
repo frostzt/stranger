@@ -2,6 +2,7 @@ import { NextFunction, Request, Response } from 'express';
 
 import CustomError from '../errors/CustomError';
 import DatabaseError from '../errors/DatabaseError.error';
+import logger from '../lib/logger';
 
 const globalErrorHandler = (
   err: Error,
@@ -34,6 +35,7 @@ const globalErrorHandler = (
       .json({ errors: duplicates.map((item) => ({ message: `${item} is already taken.`, param: item })) });
   }
 
+  logger.error(err);
   res.status(500).send({
     errors: [{ message: 'Um, I guess something broke?! I am on it!' }],
   });

@@ -37,4 +37,22 @@ export default class AuthController {
   public async signUp(req: Request, res: Response) {
     return this.authService.signUp(req, res);
   }
+
+  /**
+   * Authenticate a user for first time login, NOT related to refreshToken, only for first
+   * authentication and generating a new refreshToken
+   * @param req Request object
+   * @param res Response object
+   * @returns Object containing user object and status
+   */
+  @Post('/signin', [
+    [
+      body('email').isEmail().withMessage('Email must be valid'),
+      body('password').trim().isLength({ min: 1 }).withMessage('Please provide a password'),
+    ],
+    validateRequest,
+  ])
+  public async signIn(req: Request, res: Response) {
+    return this.authService.signIn(req, res);
+  }
 }

@@ -61,7 +61,6 @@ const userSchema = new mongoose.Schema<UserAttrs>(
       type: String,
       minlength: 8,
       required: true,
-      select: false,
     },
     createdAt: {
       type: Date,
@@ -80,6 +79,7 @@ const userSchema = new mongoose.Schema<UserAttrs>(
       transform: function serializeDoc(doc, ret) {
         ret.id = ret._id;
         delete ret._id;
+        delete ret.password;
       },
     },
   },
@@ -90,12 +90,6 @@ userSchema.pre('save', async function encryptPassword(next) {
   this.password = await bcrypt.hash(this.password, 12);
   next();
 });
-
-// Allow comparePassword to exist on the userDoc
-userSchema.methods.correctPassword = async function comparePassword(candidatePassword: string, userPassword: string) {
-  const match = await bcrypt.compare(candidatePassword, userPassword);
-  return match;
-};
 
 // the statics needs to come before the User object is created
 // eslint-disable-next-line @typescript-eslint/no-use-before-define
