@@ -30,7 +30,7 @@ const app = new ExpressApplication(
 app.start();
 
 app.io.on('connection', (socket) => {
-  console.log(socket);
+  console.log(socket.id);
 });
 
 // Shutdown on unhandled Rejection

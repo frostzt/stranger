@@ -30,7 +30,14 @@ class ExpressApplication {
   constructor(private port: string | number, private middlewares: any[], private controllers: any[]) {
     this.app = express();
     this.httpServer = createServer(this.app);
-    this.io = new Server(this.httpServer);
+    this.io = new Server(this.httpServer, {
+      cors: {
+        origin: 'http://localhost:3000',
+        methods: ['GET', 'POST'],
+        allowedHeaders: [],
+        credentials: true,
+      },
+    });
     this.port = port;
     this.dbUrl = process.env.DATABASE_URL!;
 
