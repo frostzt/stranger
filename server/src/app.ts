@@ -29,6 +29,10 @@ const app = new ExpressApplication(
 // Start the server
 app.start();
 
+app.io.on('connection', (socket) => {
+  console.log(socket);
+});
+
 // Shutdown on unhandled Rejection
 // process.on('unhandledRejection', (err: Error) => {
 //   logger.error(err.name, err.message);
@@ -44,3 +48,5 @@ app.start();
 //     logger.warn('Process terminated');
 //   });
 // });
+
+export default app;
