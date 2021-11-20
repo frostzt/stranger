@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@craco/craco": "^6.4.0",
     "@testing-library/jest-dom": "^5.11.4",
     "@testing-library/react": "^11.1.0",
     "@testing-library/user-event": "^12.1.10",
@@ -18,10 +19,10 @@
     "web-vitals": "^1.0.1"
   },
   "scripts": {
-    "start": "react-scripts start",
+    "start": "craco start",
     "start:prod": "serve -s build",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
+    "build": "craco build",
+    "test": "craco test",
     "eject": "react-scripts eject",
     "prepare": "husky install",
     "check-types": "tsc --pretty --noEmit",
@@ -51,6 +52,7 @@
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^5.4.0",
     "@typescript-eslint/parser": "^5.4.0",
+    "autoprefixer": "^9",
     "eslint": "^7.32.0",
     "eslint-config-airbnb": "^19.0.0",
     "eslint-config-prettier": "^8.3.0",
@@ -60,7 +62,9 @@
     "eslint-plugin-react": "^7.27.0",
     "eslint-plugin-react-hooks": "^4.3.0",
     "husky": "^7.0.0",
+    "postcss": "^7",
     "prettier": "^2.4.1",
-    "serve": "^13.0.2"
+    "serve": "^13.0.2",
+    "tailwindcss": "npm:@tailwindcss/postcss7-compat"
   }
 }
