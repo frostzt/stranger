@@ -72,8 +72,5 @@
   "bugs": {
     "url": "https://github.com/frostzt/stranger-server/issues"
   },
-  "homepage": "https://github.com/frostzt/stranger-server#readme",
-  "engines": {
-    "node": "14.x"
-  }
+  "homepage": "https://github.com/frostzt/stranger-server#readme"
 }
