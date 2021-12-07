@@ -72,6 +72,17 @@ export default class AuthController {
   }
 
   /**
+   * Revokes the currently active refreshToken
+   * @param req Request Object
+   * @param res Response Object
+   * @returns NOTHING
+   */
+  @Post('/revokeToken', [requireAuthentication])
+  public async revokeToken(req: AuthenticatedRequest, res: Response) {
+    return this.authService.revokeToken(req, res);
+  }
+
+  /**
    * Returns all the available all the refreshTokens
    * @param req Request object
    * @param res Response object

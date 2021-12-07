@@ -1,4 +1,5 @@
 import { Request, Response } from 'express';
+import AuthenticatedRequest from '../../interfaces/AuthenticatedRequest.interface';
 
 // Decorators
 import Controller from '../../decorators/RouteDecorators/controller.decorator';
@@ -31,6 +32,11 @@ class UserController {
   @Get('', [requireAuthentication, restrictTo(UserRoles.ADMIN)])
   public async getUsers(req: Request, res: Response) {
     return this.userService.getUsers(req, res);
+  }
+
+  @Get('/me', [requireAuthentication])
+  public async me(req: AuthenticatedRequest, res: Response) {
+    return this.userService.me(req, res);
   }
 }
 

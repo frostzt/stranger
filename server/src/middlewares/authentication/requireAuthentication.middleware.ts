@@ -40,6 +40,7 @@ const requireAuthentication = async (req: Request, res: Response, next: NextFunc
   }
 
   const filteredUser: AuthenticatedUser = {
+    id: currentUser.id,
     name: currentUser.name,
     email: currentUser.email,
     role: currentUser.role,

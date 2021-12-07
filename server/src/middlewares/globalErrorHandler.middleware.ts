@@ -42,9 +42,16 @@ const globalErrorHandler = (
 
   // Handle JWT Token expired
   if (err.name === 'TokenExpiredError') {
-    return res.status(401).json({ errors: [{ message: 'Token expired please login again.' }] });
+    return res.status(401).json({ errors: [{ message: 'Session expired please login again.' }] });
   }
 
+  //
+  if (err.name === 'JsonWebTokenError') {
+    return res.status(401).json({ errors: [{ message: 'This session appears to be invalid! Please login again!' }] });
+  }
+
+  console.error(JSON.parse(JSON.stringify(err)));
+  console.log('xxxxxxxxxxxxxxxxxxxxxx');
   console.error(err);
 
   res.status(500).send({

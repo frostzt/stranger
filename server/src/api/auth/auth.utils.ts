@@ -41,6 +41,7 @@ export const generateRefreshToken = (user: UserDoc) => {
 export const setRefreshTokenCookie = (res: Response, rtoken: string): void => {
   const cookieOptions = {
     httpOnly: true,
+    secure: process.env.NODE_ENV === 'production',
     expires: new Date(Date.now() + parseInt(process.env.REFRESH_TOKEN_EXPIRES_IN!, 10)),
   };
   res.cookie('refreshToken', rtoken, cookieOptions);
