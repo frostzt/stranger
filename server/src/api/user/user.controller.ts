@@ -6,6 +6,7 @@ import { Get } from '../../decorators/RouteDecorators/handlers.decorator';
 
 // Middlewares
 import restrictTo from '../../middlewares/authentication/restrictTo.middleware';
+import requireAuthentication from '../../middlewares/authentication/requireAuthentication.middleware';
 
 // Service
 import UserService from './user.service';
@@ -21,9 +22,15 @@ class UserController {
     this.userService = new UserService();
   }
 
-  @Get('', [restrictTo(UserRoles.ADMIN)])
+  /**
+   * Get all the users from the db, protected and restricted to ADMINs
+   * @param req Request Object
+   * @param res Response Object
+   * @returns Array containing all the users
+   */
+  @Get('', [requireAuthentication, restrictTo(UserRoles.ADMIN)])
   public async getUsers(req: Request, res: Response) {
-    return this.userService.getUser(req, res);
+    return this.userService.getUsers(req, res);
   }
 }
 

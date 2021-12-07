@@ -55,6 +55,7 @@ class ExpressApplication {
   }
 
   private async verifyEnvironmentalVariables() {
+    logger.info('Setting up env variables, if this throws an error please check envs!');
     if (
       !process.env.JWT_SECRET ||
       !process.env.JWT_EXPIRES_IN ||
@@ -66,6 +67,7 @@ class ExpressApplication {
   }
 
   private async initDatabase() {
+    logger.info('Connecting to database...');
     try {
       await mongoose.connect(this.dbUrl);
       logger.info('Connected to database...');
@@ -77,6 +79,7 @@ class ExpressApplication {
 
   // Configure and plug in middlewares
   private setupMiddlewares(middlewaresArr: any[]) {
+    logger.info('Setting up middlewares...');
     middlewaresArr.forEach((middleware) => {
       this.app.use(middleware);
     });
@@ -84,6 +87,7 @@ class ExpressApplication {
 
   // Configure routes
   private setupRoutes(controllers: any[]) {
+    logger.info('Setting up routes...');
     const info: Array<{ api: string; handler: string }> = [];
 
     controllers.forEach((Controller) => {
@@ -118,17 +122,20 @@ class ExpressApplication {
   }
 
   private configureAssets() {
+    logger.info('Setting up static assets...');
     this.app.use(express.static(path.join(__dirname, '../public')));
   }
 
   // The morgan route-logger will work only for the development env
   private setupLogger() {
+    logger.info('Setting up morgan for dev logging...');
     if (process.env.NODE_ENV === 'development') {
       this.app.use(morgan('dev'));
     }
   }
 
   private setupSwagger() {
+    logger.info('Setting up Swagger docs, check them on /api/documentation');
     this.app.use('/api/documentation', swaggerUi.serve, swaggerUi.setup(swaggerOptions));
   }
 
