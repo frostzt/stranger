@@ -9,6 +9,7 @@ interface UserAttrs {
   email: string;
   bio?: string;
   role?: string;
+  picture?: string;
   username: string;
   password: string;
   createdAt?: Date;
@@ -24,6 +25,7 @@ export interface UserDoc extends mongoose.Document {
   email: string;
   bio?: string;
   role?: string;
+  picture?: string;
   username: string;
   password: string;
   createdAt?: Date;
@@ -36,6 +38,10 @@ const userSchema = new mongoose.Schema<UserAttrs>(
     name: {
       type: String,
       required: true,
+    },
+    picture: {
+      type: String,
+      default: 'https://i.imgur.com/kKAFtgu.png',
     },
     email: {
       type: String,

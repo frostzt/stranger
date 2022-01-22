@@ -16,9 +16,13 @@ export default class UserService {
     return new SendSuccessResponse(res, 200, SuccessStatus.SUCCESS, { users });
   }
 
+  /**
+   * @method GET
+   * @route /api/users/me
+   * @returns UserDoc containing user data
+   */
   public async me(req: AuthenticatedRequest, res: Response) {
     const { user } = req;
-    console.log(req.user);
 
     return new SendSuccessResponse(res, 200, SuccessStatus.SUCCESS, { user });
   }

@@ -34,6 +34,12 @@ class UserController {
     return this.userService.getUsers(req, res);
   }
 
+  /**
+   * Fetch and send the user data for thier personal profile
+   * @param req Request Object
+   * @param res Response Object
+   * @returns UserDoc containing user data
+   */
   @Get('/me', [requireAuthentication])
   public async me(req: AuthenticatedRequest, res: Response) {
     return this.userService.me(req, res);
