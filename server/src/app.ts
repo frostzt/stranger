@@ -1,15 +1,11 @@
+import cookieParser from 'cookie-parser';
 import dotenv from 'dotenv';
 import express from 'express';
-import cookieParser from 'cookie-parser';
+import 'express-async-errors'; // wrapper for async errors
 import 'reflect-metadata'; // for store decorator metadata
-import 'express-async-errors'; // error handler can't do shit without this
-
-import ExpressApplication from './bootstrapper';
-
-// Controllers
-import UserController from './api/user/user.controller';
 import AuthController from './api/auth/auth.controller';
-// import logger from './lib/logger';
+import UserController from './api/user/user.controller';
+import ExpressApplication from './bootstrapper';
 
 // Load the env vars based on the current NODE_ENV
 if (process.env.NODE_ENV !== 'production') {
@@ -30,7 +26,7 @@ const app = new ExpressApplication(
 app.start();
 
 app.io.on('connection', (socket) => {
-  console.log(socket.id);
+  console.log(socket);
 });
 
 // Shutdown on unhandled Rejection

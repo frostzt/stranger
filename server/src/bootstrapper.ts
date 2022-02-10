@@ -1,22 +1,18 @@
-import path from 'path';
-import morgan from 'morgan';
-import mongoose from 'mongoose';
-import { Server } from 'socket.io';
-import swaggerUi from 'swagger-ui-express';
 import express, { Application, Handler } from 'express';
 import { createServer, Server as HTTPServer } from 'http';
-
-// Utils
-import logger from './utils/logger';
-import swaggerOptions from './swagger.json';
-import MetadataKeys from './utils/metadata.keys';
+import mongoose from 'mongoose';
+import morgan from 'morgan';
+import path from 'path';
+import swaggerUi from 'swagger-ui-express';
+import { WebSocketServer } from 'ws';
 import { IRouter } from './decorators/RouteDecorators/handlers.decorator';
-
-// Middlewares
-import NotFoundError from './errors/NotFoundError.error';
 import DatabaseError from './errors/DatabaseError.error';
-import globalErrorHandler from './middlewares/globalErrorHandler.middleware';
 import EnvironmentalVariableNotFoundError from './errors/EnvironmentalVariableNotFoundError.error';
+import NotFoundError from './errors/NotFoundError.error';
+import globalErrorHandler from './middlewares/globalErrorHandler.middleware';
+import swaggerOptions from './swagger.json';
+import logger from './utils/logger';
+import MetadataKeys from './utils/metadata.keys';
 
 class ExpressApplication {
   private app: Application;
@@ -30,14 +26,7 @@ class ExpressApplication {
   constructor(private port: string | number, private middlewares: any[], private controllers: any[]) {
     this.app = express();
     this.httpServer = createServer(this.app);
-    this.io = new Server(this.httpServer, {
-      cors: {
-        origin: 'http://localhost:3000',
-        methods: ['GET', 'POST'],
-        allowedHeaders: [],
-        credentials: true,
-      },
-    });
+    this.io = new WebSocketServer({ server: this.httpServer });
     this.port = port;
     this.dbUrl = process.env.DATABASE_URL!;
 
