@@ -1,0 +1,60 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Stranger API",
+    "description": "API for Stranger, an application for people who love languages!",
+    "contact": {
+      "name": "frostzt"
+    },
+    "version": "3.0.3",
+    "license": {
+      "name": "MIT",
+      "url": "https://www.opensource.org/licenses/MIT"
+    }
+  },
+  "servers": [
+    {
+      "url": "http://localhost:5000/",
+      "description": "Local development server API"
+    }
+  ],
+  "host": "localhost:5000",
+  "basePath": "",
+  "tags": [
+    {
+      "name": "Stranger",
+      "description": "API for Stranger, an application for people who love languages!"
+    }
+  ],
+  "schemes": ["http"],
+  "consumes": ["application/json"],
+  "produces": ["application/json"],
+  "definitions": {
+    "User": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "email": {
+          "type": "string"
+        },
+        "bio": {
+          "type": "string"
+        },
+        "role": {
+          "type": "string"
+        },
+        "username": {
+          "type": "string"
+        },
+        "password": {
+          "type": "string"
+        },
+        "createdAt": {
+          "type": "string"
+        }
+      }
+    }
+  }
+}
